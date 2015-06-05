@@ -1,0 +1,87 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<MvcMovie.Models.Movie>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+
+<p>
+
+
+    @Html.ActionLink("Create New", "Create")
+
+@using (Html.BeginForm("Index", "Movies", FormMethod.Get))
+{
+    <p>
+
+
+        Genre: @Html.DropDownList("movieGenre", "All")
+        Title: @Html.TextBox("SearchString") <br /><br />
+        <input type="submit" value="Filter" />
+
+
+    </p>
+    }
+
+
+
+<div class="col-md-4">
+    <h2>See the movies in IMDB </h2>
+    <p><a href="http://www.imdb.com/chart/top?ref_=nv_ch_250_4" target="_blank">IMDB</a><br></p>
+
+</div>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().ReleaseDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Genre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().Price)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+           
+
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReleaseDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Genre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
+
+
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, movieGenre = Request.QueryString["movieGenre"], searchString = Request.QueryString["searchString"] }),
+    new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true })
